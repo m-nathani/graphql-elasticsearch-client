@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-koa';
 import paginationSchema from './pagination';
 import projectSchema from './project';
 import companySchema from './company';
+import searchSchema from './search';
 
 const linkSchema = gql`
   scalar Date
@@ -40,4 +41,4 @@ const linkSchema = gql`
 `;
 
 
-export default [linkSchema, paginationSchema, projectSchema, companySchema];
+export default [linkSchema, paginationSchema, projectSchema, companySchema, searchSchema];
