@@ -3,10 +3,13 @@ import paginationSchema from './pagination';
 import projectSchema from './project';
 import companySchema from './company';
 import searchSchema from './search';
+import filterSchema from './filter';
 
 const linkSchema = gql`
   scalar Date
   scalar JSON
+  scalar UnsignedFloat
+  scalar UnsignedInt
 
   type Query {
     _: Boolean
@@ -35,10 +38,17 @@ const linkSchema = gql`
     attribute: Float
   }
 
+  type UnsignedFloatAttr {
+    attribute: UnsignedFloat
+  }
+
+  type UnsignedIntAttr {
+    attribute: UnsignedInt
+  }
+
   type BooleanAttr {
     attribute: Boolean
   }
 `;
 
-
-export default [linkSchema, paginationSchema, projectSchema, companySchema, searchSchema];
+export default [linkSchema, paginationSchema, projectSchema, companySchema, searchSchema, filterSchema];

@@ -1,9 +1,7 @@
 import { CLIENT } from '../constant';
 import trpFilters from './trp';
 
-const defaultTemplate = {
-    filters: [{ 'match_all': {} }]
-};
+const defaultTemplate = [{ 'match_all': {} }];
 
 export const clientTemplate = (client: any) => {
     let clientFilters = {};

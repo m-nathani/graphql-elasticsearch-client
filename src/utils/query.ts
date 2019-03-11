@@ -1,8 +1,13 @@
-export const searchString = (query: string , fields: Array<string>= ['_all']) => {
+export const searchString = (query: string, fields: Array<string> = ['_all']) => {
     return {
-        query_string: {
-            query,
-            fields
+        bool: {
+            must: [{
+                query_string: {
+                    default_field: '_all',
+                    query,
+                    fields
+                }
+            }]
         }
     };
 };

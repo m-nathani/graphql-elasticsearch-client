@@ -1,19 +1,17 @@
-export default {
-    filters: [
-      {
-        term: {
-          isActive: true
-        }
-      },
-      {
-        exists: {
-          field: 'portals'
-        }
-      },
-      {
-        term: {
-          'portals.id': 'BRI'
-        }
-      }
-    ]
-};
+export default [
+  {
+    term: {
+      isActive: true
+    }
+  },
+  {
+    exists: {
+      field: 'portals'
+    }
+  },
+  {
+    terms: {
+      'portals.id': ['BRI']
+    }
+  }
+];

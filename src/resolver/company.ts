@@ -7,14 +7,15 @@ export default {
       return await getCompany(id);
     },
 
-    companies: async (_obj, { perPage, page, q, sort, filter, client }, _context, _info) => {
-      const data =  await getCompanies(perPage, page, q, sort, filter, client);
+    companies: async (_obj, { input }, _context, _info) => {
+      const { perPage, page, q, sort, filters, client } = input;
+      const data =  await getCompanies(perPage, page, q, sort, filters, client);
       const items = data && data.hits && data.hits.hits || [];
-      const itemCount = data && data.hits && data.hits.total || 0;
+      const itemCount: number = data && data.hits && data.hits.total || 0;
       return {
         result: items.map(item => item._source),
         count: itemCount,
-        ...pageInfo(perPage, page, itemCount),
+        pageInfo: pageInfo(perPage, page, itemCount),
       };
     }
   },

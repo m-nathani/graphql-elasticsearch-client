@@ -2,8 +2,7 @@ import { elasticClient } from '../boostrap/elasticsearch';
 import { PROJECT_INDEX, PROJECT_TYPE, PAGINATION } from '../constant';
 import { SearchResponse } from 'elasticsearch';
 import { clientTemplate } from '../template';
-import { searchString } from '../utils';
-import { sortSearch } from '../utils/sort';
+import { searchString, sortSearch, esFilters } from '../utils';
 
 const projectElasticConfig = {
     index: PROJECT_INDEX,
@@ -19,8 +18,9 @@ export const getProject = async (id: string): Promise<any> => {
 };
 
 export const getProjects = async <T>(perPage: number = PAGINATION.PER_PAGE, page: number = PAGINATION.PAGE,
-     query: string = '*', sort: string[], filter: any, client: string): Promise<SearchResponse<T>> => {
-    return elasticClient.search({
+    query: string = '*', sort: string[], filters: any, client: string): Promise<SearchResponse<T>> => {
+
+        return elasticClient.search({
         ...projectElasticConfig,
         size: perPage,
         from: perPage * (page - 1),
@@ -30,10 +30,10 @@ export const getProjects = async <T>(perPage: number = PAGINATION.PER_PAGE, page
                 filtered: {
                     query: {
                         bool: {
-                            must: [
+                            should: [
                                 searchString(query, [
                                     'name.attribute'
-                                ])
+                                ]),
                             ],
                         }
                     }
@@ -41,7 +41,10 @@ export const getProjects = async <T>(perPage: number = PAGINATION.PER_PAGE, page
             },
             filter: {
                 and: {
-                    ...clientTemplate(client),
+                    filters: {
+                        ...clientTemplate(client),
+                        ...esFilters(filters),
+                    }
                 }
             }
         }
