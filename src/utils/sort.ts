@@ -1,6 +1,15 @@
-export const sortSearch = (query: string, sort: string[]) => {
-    if (sort && sort.length) {
+import * as _ from 'underscore';
+import { DEFAULT_QUERY } from '../constant';
+
+export const esSort = (query: string, sort: string[]) => {
+    if (sort && !(_.isEmpty(sort))) {
         return sort;
     }
-    return query === '*' ? ['lastModified.attribute:desc'] : ['_score:desc'];
+    return query === DEFAULT_QUERY ? ['lastModified.attribute:desc'] : ['_score:desc'];
+};
+
+export const mergeCommonSort = ({common = [], ...restSort}) => {
+    return _.mapObject(restSort, function(sortArray = [], _key) {
+        return _.union(common, sortArray);
+    });
 };

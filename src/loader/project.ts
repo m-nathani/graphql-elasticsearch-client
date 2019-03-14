@@ -1,8 +1,8 @@
 import { elasticClient } from '../boostrap/elasticsearch';
-import { PROJECT_INDEX, PROJECT_TYPE, PAGINATION } from '../constant';
+import { PROJECT_INDEX, PROJECT_TYPE, PAGINATION, DEFAULT_QUERY, CLIENT } from '../constant';
 import { SearchResponse } from 'elasticsearch';
 import { clientTemplate } from '../template';
-import { searchString, sortSearch, esFilters } from '../utils';
+import { searchString, esSort, esFilters, Filters } from '../utils';
 
 const projectElasticConfig = {
     index: PROJECT_INDEX,
@@ -18,13 +18,39 @@ export const getProject = async (id: string): Promise<any> => {
 };
 
 export const getProjects = async <T>(perPage: number = PAGINATION.PER_PAGE, page: number = PAGINATION.PAGE,
-    query: string = '*', sort: string[], filters: any, client: string): Promise<SearchResponse<T>> => {
+    query: string = DEFAULT_QUERY, sort: string[] = [], filters: Filters, client: string = CLIENT.DEFAULT)
+    : Promise<SearchResponse<T>> => {
 
-        return elasticClient.search({
+    console.log('-------------Projects--------------');
+    console.log(esSort(query, sort));
+    console.log(JSON.stringify({query: {
+            filtered: {
+                query: {
+                    bool: {
+                        should: [
+                            searchString(query, [
+                                'name.attribute'
+                            ]),
+                        ],
+                    }
+                }
+            }
+        },
+        filter: {
+            and: {
+                filters: [
+                    ...clientTemplate(client),
+                    ...esFilters(filters),
+                ]
+            }
+        }
+    }));
+
+    return elasticClient.search({
         ...projectElasticConfig,
         size: perPage,
         from: perPage * (page - 1),
-        sort: sortSearch(query, sort),
+        sort: esSort(query, sort),
         body: {
             query: {
                 filtered: {
@@ -41,10 +67,10 @@ export const getProjects = async <T>(perPage: number = PAGINATION.PER_PAGE, page
             },
             filter: {
                 and: {
-                    filters: {
+                    filters: [
                         ...clientTemplate(client),
                         ...esFilters(filters),
-                    }
+                    ]
                 }
             }
         }

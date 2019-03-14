@@ -12,7 +12,7 @@ export default gql`
   }
 
   input CompanyFilters {
-    creationDate: String
+    dateFilter: [DateFilter]
   }
 
   extend type Query {

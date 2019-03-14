@@ -1,5 +1,6 @@
 import { getCompany, getCompanies } from '../loader';
 import { pageInfo } from '../utils';
+import { DEFAULT_INPUT } from '../constant';
 
 export default {
   Query: {
@@ -7,11 +8,12 @@ export default {
       return await getCompany(id);
     },
 
-    companies: async (_obj, { input }, _context, _info) => {
+    companies: async (_obj, { input = DEFAULT_INPUT } , _context, _info) => {
       const { perPage, page, q, sort, filters, client } = input;
       const data =  await getCompanies(perPage, page, q, sort, filters, client);
       const items = data && data.hits && data.hits.hits || [];
       const itemCount: number = data && data.hits && data.hits.total || 0;
+
       return {
         result: items.map(item => item._source),
         count: itemCount,

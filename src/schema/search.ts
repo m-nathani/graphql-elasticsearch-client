@@ -8,17 +8,24 @@ export default gql`
       page: Int
       q: String
       filters: SearchFilter
-      sort: [String]
+      sort: SearchSort
       client: String
+  }
+
+  input SearchSort {
+    common: [String]
+    project: [String]
+    company: [String]
   }
 
   input SearchFilter {
     common: CommonFilters
     project: ProjectFilters
+    company: CompanyFilters
   }
 
   input CommonFilters {
-    country: String
+    dateFilter: [DateFilter]
   }
 
   extend type Query {

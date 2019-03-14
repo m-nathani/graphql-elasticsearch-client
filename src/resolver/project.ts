@@ -1,5 +1,6 @@
 import { getProject,  getProjects } from '../loader';
 import { pageInfo } from '../utils';
+import { DEFAULT_INPUT } from '../constant';
 
 export default {
   Query: {
@@ -7,7 +8,7 @@ export default {
       return await getProject(id);
     },
 
-    projects: async (_obj, { input } , _context, _info) => {
+    projects: async (_obj, { input = DEFAULT_INPUT } , _context, _info) => {
       const { perPage, page, q, sort, filters, client } = input;
       const data =  await getProjects(perPage, page, q, sort, filters, client);
       const items = data && data.hits && data.hits.hits || [];

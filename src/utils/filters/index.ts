@@ -1,8 +1,8 @@
 import * as _  from 'underscore';
 import { dateFilter, DateFilter } from './date-filter';
 
-interface Filters {
-  dateFilter: DateFilter[];
+export interface Filters {
+  dateFilter?: DateFilter[];
 }
 
 const filteredResult = (result = []) => {
@@ -17,4 +17,10 @@ export const esFilters = (filters: Filters) => {
     }
   }
   return filteredResult(resultFilter);
+};
+
+export const mergeCommonFilters = (common = {}, ...restFilters) => {
+    return _.mapObject(restFilters, function(filterArray = [], _key) {
+      return { ...common, ...filterArray};
+  });
 };
