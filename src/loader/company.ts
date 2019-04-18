@@ -21,32 +21,6 @@ export const getCompanies = async <T>(perPage: number = PAGINATION.PER_PAGE, pag
     query: string = DEFAULT_QUERY, sort: string[] = [], filters: Filters, client: string = CLIENT.DEFAULT)
     : Promise<SearchResponse<T>> => {
 
-    console.log('-------------Companies--------------');
-    console.log(esSort(query, sort));
-    console.log(JSON.stringify({query: {
-            filtered: {
-                query: {
-                    bool: {
-                        should: [
-                            searchString(query, [
-                                'name.attribute'
-                            ]),
-                        ],
-                    }
-                }
-            }
-        },
-        filter: {
-            and: {
-                filters: [
-                    ...clientTemplate(client),
-                    ...esFilters(filters),
-                ]
-            }
-        }
-    }));
-
-
     return elasticClient.search({
         ...companyElasticConfig,
         size: perPage,
