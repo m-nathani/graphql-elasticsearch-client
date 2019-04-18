@@ -10,9 +10,6 @@ export default {
             const { sort, filters, ...restInput } = input;
             const {project: projectSort, company: companytSort } = mergeCommonSort(sort);
             const {project: projectFilter, company: companytFilter } = mergeCommonFilters(filters);
-
-            console.log(projectFilter);
-
             return {
                 projects: projectResolver.Query.projects(_obj,
                      { input: {sort: projectSort, filters: projectFilter, ...restInput}, ...restArgs }, _context, _info),
